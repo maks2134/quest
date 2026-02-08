@@ -1,0 +1,38 @@
+version: "2"
+linters:
+  enable:
+    - govet
+    - staticcheck
+    - errcheck
+    - gocritic
+    - gosec
+    - cyclop
+    - bodyclose
+    - dupl
+    - ineffassign
+    - unparam
+    - errname
+    - contextcheck
+    - containedctx
+    - forbidigo
+  disable:
+    - gocyclo
+    - lll
+  settings:
+    forbidigo:
+      exclude-godoc-examples: true
+      analyze-types: true
+      forbid:
+        - pattern: '^fmt\.Print.*$'
+          msg: "Запрещено на прямую использовать fmt.Print* для логирования"
+        - pattern: '^time.Sleep$'
+          msg: 'Заперщено напрямую использовать time.Sleep в проде, используйте таймеры/контекст'
+        - pattern: '^http\.DefaultClient$'
+          msg: "Не используйте DefaultClient (нет таймаутов); Создай *http.Client с таймаутами"
+    gosec:
+      config:
+        global:
+          audit: true
+          show-ignored: true
+        severity: medium
+        confidence: medium

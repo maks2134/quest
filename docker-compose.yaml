@@ -1,0 +1,62 @@
+services:
+  db:
+    image: postgres:17.4
+    container_name: quest_db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-quest}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-quest}
+      POSTGRES_DB: ${POSTGRES_DB:-quest}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-quest} -d ${POSTGRES_DB:-quest}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    networks:
+      - quest_network
+
+  app:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      args:
+        TARGETARCH: amd64
+    container_name: quest_app
+    restart: always
+    env_file:
+      - .env
+    environment:
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_USER:-quest}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-quest}
+      POSTGRES_DB: ${POSTGRES_DB:-quest}
+      DB_SSLMODE: ${DB_SSLMODE:-disable}
+      MUX_PORT: ${MUX_PORT:-8000}
+      CORS_ALLOW_ORIGINS: ${CORS_ALLOW_ORIGINS:-http://localhost:5173,http://localhost:3000}
+      CORS_ALLOW_METHODS: ${CORS_ALLOW_METHODS:-GET,POST,PUT,DELETE,OPTIONS}
+      CORS_ALLOW_HEADERS: ${CORS_ALLOW_HEADERS:-Origin,Content-Type,Accept,Authorization}
+      CORS_MAX_AGE: ${CORS_MAX_AGE:-3600}
+    ports:
+      - "${MUX_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - quest_network
+    volumes:
+      - ./server/migrations:/migrations:ro
+
+volumes:
+  db_data:
+
+networks:
+  quest_network:
+    driver: bridge
