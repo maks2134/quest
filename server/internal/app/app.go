@@ -2,17 +2,16 @@ package app
 
 import (
 	"strings"
+	"tech-quest/internal/configs"
+	"tech-quest/internal/container"
+	"tech-quest/internal/routes"
+	"tech-quest/pkg/errors"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	recover2 "github.com/gofiber/fiber/v3/middleware/recover"
 	"github.com/gofiber/fiber/v3/middleware/static"
-
-	"tech-quest/internal/configs"
-	"tech-quest/internal/container"
-	"tech-quest/internal/routes"
-	"tech-quest/pkg/errors"
 )
 
 func App() {

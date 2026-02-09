@@ -7,10 +7,10 @@ import (
 )
 
 type ProcedureService struct {
-	repo *repository.ProcedureRepository
+	repo repository.ProcedureRepos
 }
 
-func NewProcedureService(repo *repository.ProcedureRepository) *ProcedureService {
+func NewProcedureService(repo repository.ProcedureRepos) *ProcedureService {
 	return &ProcedureService{repo: repo}
 }
 

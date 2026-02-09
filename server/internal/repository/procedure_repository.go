@@ -1,10 +1,20 @@
 package repository
 
 import (
-	"github.com/jmoiron/sqlx"
 	"tech-quest/internal/domain/models"
 	"tech-quest/pkg/errors"
+
+	"github.com/jmoiron/sqlx"
 )
+
+type ProcedureRepos interface {
+	GetAll() ([]models.Procedure, error)
+	GetByID(id int) (*models.Procedure, error)
+	GetByType(procedureType string) ([]models.Procedure, error)
+	Create(procedure *models.Procedure) error
+	Update(procedure *models.Procedure) error
+	Delete(id int) error
+}
 
 type ProcedureRepository struct {
 	db *sqlx.DB

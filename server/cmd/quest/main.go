@@ -2,15 +2,13 @@
 // @version 1.0.0
 // @description API для управления процедурами розыска посылок и оформления заявлений о повреждении или утрате
 // @host localhost:8000
-// @BasePath /api/v1
 package main
 
 import (
 	"log"
-	"tech-quest/pkg/database"
-
 	"tech-quest/internal/app"
 	"tech-quest/internal/configs"
+	"tech-quest/pkg/database"
 )
 
 func main() {
